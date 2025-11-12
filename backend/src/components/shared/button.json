@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_shared_buttons",
+  "info": {
+    "displayName": "Button",
+    "description": "Reusable button component for CTAs"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    },
+    "variant": {
+      "type": "enumeration",
+      "enum": ["primary", "outline", "ghost", "destructive"],
+      "default": "primary"
+    },
+    "open_in_new_tab": {
+      "type": "boolean",
+      "default": false
+    },
+    "icon_name": {
+      "type": "string",
+      "maxLength": 50
+    }
+  }
+}
+

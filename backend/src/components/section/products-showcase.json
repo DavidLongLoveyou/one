@@ -1,0 +1,56 @@
+{
+  "collectionName": "components_section_products_showcases",
+  "info": {
+    "displayName": "Products Showcase",
+    "description": "Product showcase section"
+  },
+  "options": {},
+  "attributes": {
+    "headline": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "subheadline": {
+      "type": "text",
+      "maxLength": 250
+    },
+    "products": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product.product"
+    },
+    "products_per_row_desktop": {
+      "type": "enumeration",
+      "enum": ["3", "4"],
+      "default": "3"
+    },
+    "products_per_row_mobile": {
+      "type": "enumeration",
+      "enum": ["1", "2"],
+      "default": "1"
+    },
+    "show_specifications": {
+      "type": "boolean",
+      "default": true
+    },
+    "show_price": {
+      "type": "boolean",
+      "default": false
+    },
+    "show_categories": {
+      "type": "boolean",
+      "default": true
+    },
+    "card_layout": {
+      "type": "enumeration",
+      "enum": ["image-top", "image-left", "overlay"],
+      "default": "image-top"
+    },
+    "enable_quick_view": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}
+

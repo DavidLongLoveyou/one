@@ -1,0 +1,37 @@
+{
+  "collectionName": "components_hero_hotspots",
+  "info": {
+    "displayName": "Hotspot",
+    "description": "Interactive hotspot marker on hero image"
+  },
+  "options": {},
+  "attributes": {
+    "position_x": {
+      "type": "decimal",
+      "required": true,
+      "min": 0,
+      "max": 100
+    },
+    "position_y": {
+      "type": "decimal",
+      "required": true,
+      "min": 0,
+      "max": 100
+    },
+    "tooltip_title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "tooltip_content": {
+      "type": "text",
+      "maxLength": 250
+    },
+    "icon_type": {
+      "type": "enumeration",
+      "enum": ["question", "info", "star", "check"],
+      "default": "info"
+    }
+  }
+}
+

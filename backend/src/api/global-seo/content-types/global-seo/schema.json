@@ -1,0 +1,43 @@
+{
+  "kind": "singleType",
+  "collectionName": "global_seos",
+  "info": {
+    "singularName": "global-seo",
+    "pluralName": "global-seos",
+    "displayName": "Global SEO",
+    "description": "Global SEO settings"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "default_meta_title": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "default_meta_description": {
+      "type": "text",
+      "maxLength": 160
+    },
+    "default_meta_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "site_url": {
+      "type": "string",
+      "required": true
+    },
+    "google_site_verification": {
+      "type": "string"
+    },
+    "google_analytics_id": {
+      "type": "string"
+    },
+    "google_tag_manager_id": {
+      "type": "string"
+    }
+  }
+}
+

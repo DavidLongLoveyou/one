@@ -1,0 +1,78 @@
+{
+  "collectionName": "components_section_hero_advanceds",
+  "info": {
+    "displayName": "Hero Advanced",
+    "description": "Advanced hero section with stats, hotspots, and CTAs"
+  },
+  "options": {},
+  "attributes": {
+    "headline": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "subheadline": {
+      "type": "text",
+      "maxLength": 250
+    },
+    "primary_cta": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.button",
+      "required": true
+    },
+    "secondary_cta": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.button",
+      "required": false
+    },
+    "background_image_desktop": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["images"]
+    },
+    "background_image_mobile": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "overlay_opacity": {
+      "type": "integer",
+      "default": 40,
+      "min": 0,
+      "max": 100
+    },
+    "trust_indicators": {
+      "type": "component",
+      "repeatable": true,
+      "component": "hero.trust-indicator"
+    },
+    "stats": {
+      "type": "component",
+      "repeatable": true,
+      "component": "hero.stat"
+    },
+    "hotspots": {
+      "type": "component",
+      "repeatable": true,
+      "component": "hero.hotspot"
+    },
+    "layout_variant": {
+      "type": "enumeration",
+      "enum": ["golden-ratio-split", "centered-overlay", "full-width"],
+      "default": "golden-ratio-split"
+    },
+    "enable_gradient_text": {
+      "type": "boolean",
+      "default": true
+    },
+    "enable_animated_grid": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}
+

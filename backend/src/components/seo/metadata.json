@@ -1,0 +1,40 @@
+{
+  "collectionName": "components_seo_metadata",
+  "info": {
+    "displayName": "SEO Metadata",
+    "description": "SEO metadata component"
+  },
+  "options": {},
+  "attributes": {
+    "metaTitle": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "metaDescription": {
+      "type": "text",
+      "maxLength": 160
+    },
+    "metaImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "keywords": {
+      "type": "string"
+    },
+    "metaRobots": {
+      "type": "string",
+      "default": "index, follow"
+    },
+    "canonicalURL": {
+      "type": "string"
+    },
+    "metaSocial": {
+      "type": "component",
+      "repeatable": true,
+      "component": "seo.social-share"
+    }
+  }
+}
+

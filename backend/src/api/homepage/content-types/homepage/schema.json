@@ -1,0 +1,41 @@
+{
+  "kind": "singleType",
+  "collectionName": "homepages",
+  "info": {
+    "singularName": "homepage",
+    "pluralName": "homepages",
+    "displayName": "Homepage",
+    "description": "Main homepage content with dynamic zones"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "content_sections": {
+      "type": "dynamiczone",
+      "components": [
+        "section.hero-advanced",
+        "section.trust-bar-enhanced",
+        "section.services-grid",
+        "section.factory-story",
+        "section.products-showcase",
+        "section.testimonials-proof",
+        "section.blog-insights",
+        "section.faq-seo",
+        "section.cta-conversion"
+      ],
+      "required": true
+    },
+    "seo": {
+      "type": "component",
+      "component": "seo.metadata",
+      "required": false
+    }
+  }
+}
+

@@ -1,0 +1,42 @@
+{
+  "collectionName": "components_section_faq_seos",
+  "info": {
+    "displayName": "FAQ SEO",
+    "description": "FAQ section with SEO schema support"
+  },
+  "options": {},
+  "attributes": {
+    "headline": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "subheadline": {
+      "type": "text",
+      "maxLength": 250
+    },
+    "faq_items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "section.faq-item"
+    },
+    "layout": {
+      "type": "enumeration",
+      "enum": ["accordion", "grid", "split-categories"],
+      "default": "accordion"
+    },
+    "default_open_first": {
+      "type": "boolean",
+      "default": false
+    },
+    "enable_search": {
+      "type": "boolean",
+      "default": false
+    },
+    "enable_faqpage_schema": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}
+

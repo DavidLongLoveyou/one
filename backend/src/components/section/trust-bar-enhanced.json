@@ -1,0 +1,50 @@
+{
+  "collectionName": "components_section_trust_bar_enhanceds",
+  "info": {
+    "displayName": "Trust Bar Enhanced",
+    "description": "Enhanced trust bar with certifications and partnerships"
+  },
+  "options": {},
+  "attributes": {
+    "headline": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "display_style": {
+      "type": "enumeration",
+      "enum": ["logo-wall", "carousel", "grid"],
+      "default": "logo-wall"
+    },
+    "layout_desktop": {
+      "type": "enumeration",
+      "enum": ["single-row", "two-rows", "masonry"],
+      "default": "single-row"
+    },
+    "layout_mobile": {
+      "type": "enumeration",
+      "enum": ["carousel", "grid-2col"],
+      "default": "carousel"
+    },
+    "certifications": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::certification.certification"
+    },
+    "background_color": {
+      "type": "enumeration",
+      "enum": ["white", "earth", "green-50"],
+      "default": "white"
+    },
+    "logo_max_height": {
+      "type": "integer",
+      "default": 60,
+      "min": 30,
+      "max": 120
+    },
+    "enable_grayscale": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}
+

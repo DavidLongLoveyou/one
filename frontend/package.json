@@ -1,0 +1,51 @@
+{
+  "name": "the-great-beans-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "test:setup": "node test-setup.js",
+    "analyze": "ANALYZE=true next build",
+    "build:analyze": "cross-env ANALYZE=true next build"
+  },
+  "dependencies": {
+    "next": "14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.6.0",
+    "@radix-ui/react-accordion": "^1.2.0",
+    "@radix-ui/react-tooltip": "^1.1.2",
+    "@radix-ui/react-slot": "^1.1.0",
+    "class-variance-authority": "^0.7.0",
+    "framer-motion": "^11.11.17",
+    "lucide-react": "^0.454.0",
+    "tailwindcss": "^3.4.14",
+    "tailwind-merge": "^2.5.4",
+    "clsx": "^2.1.1",
+    "zod": "^3.23.8",
+    "qs": "^6.13.0",
+    "sharp": "^0.33.5",
+    "web-vitals": "^4.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/qs": "^6.9.16",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.15",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "@next/bundle-analyzer": "^14.2.15",
+    "cross-env": "^7.0.3"
+  }
+}
+

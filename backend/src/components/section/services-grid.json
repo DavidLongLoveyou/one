@@ -1,0 +1,44 @@
+{
+  "collectionName": "components_section_services_grids",
+  "info": {
+    "displayName": "Services Grid",
+    "description": "Grid display of B2B services"
+  },
+  "options": {},
+  "attributes": {
+    "headline": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "subheadline": {
+      "type": "text",
+      "maxLength": 250
+    },
+    "services": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::service.service"
+    },
+    "services_per_row_desktop": {
+      "type": "enumeration",
+      "enum": ["3", "4"],
+      "default": "3"
+    },
+    "services_per_row_mobile": {
+      "type": "enumeration",
+      "enum": ["1", "2"],
+      "default": "1"
+    },
+    "card_style": {
+      "type": "enumeration",
+      "enum": ["minimal", "detailed", "image-focus"],
+      "default": "detailed"
+    },
+    "enable_hover_effect": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}
+

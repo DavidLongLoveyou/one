@@ -1,0 +1,22 @@
+# Environment variables and secrets
+.env
+.env.local
+*.key
+*.pem
+secrets.txt
+credentials.txt
+setup-github.ps1
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+
+
+

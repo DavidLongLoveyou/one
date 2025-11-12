@@ -1,0 +1,61 @@
+{
+  "collectionName": "components_section_cta_conversions",
+  "info": {
+    "displayName": "CTA Conversion",
+    "description": "Final conversion CTA section"
+  },
+  "options": {},
+  "attributes": {
+    "headline": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "subheadline": {
+      "type": "text",
+      "maxLength": 250
+    },
+    "cta_button": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.button",
+      "required": true
+    },
+    "secondary_cta": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.button",
+      "required": false
+    },
+    "background_style": {
+      "type": "enumeration",
+      "enum": ["solid", "gradient", "image"],
+      "default": "gradient"
+    },
+    "background_color_primary": {
+      "type": "string",
+      "default": "#059669"
+    },
+    "background_color_secondary": {
+      "type": "string",
+      "default": "#047857"
+    },
+    "background_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "text_color": {
+      "type": "enumeration",
+      "enum": ["white", "dark"],
+      "default": "white"
+    },
+    "layout": {
+      "type": "enumeration",
+      "enum": ["centered", "split", "minimal"],
+      "default": "centered"
+    }
+  }
+}
+

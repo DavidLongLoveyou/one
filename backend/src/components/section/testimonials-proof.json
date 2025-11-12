@@ -1,0 +1,44 @@
+{
+  "collectionName": "components_section_testimonials_proofs",
+  "info": {
+    "displayName": "Testimonials Proof",
+    "description": "Social proof testimonials section"
+  },
+  "options": {},
+  "attributes": {
+    "headline": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "testimonials": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::testimonial.testimonial"
+    },
+    "display_style": {
+      "type": "enumeration",
+      "enum": ["carousel", "grid", "masonry"],
+      "default": "carousel"
+    },
+    "show_company_logos": {
+      "type": "boolean",
+      "default": true
+    },
+    "show_ratings": {
+      "type": "boolean",
+      "default": true
+    },
+    "autoplay": {
+      "type": "boolean",
+      "default": true
+    },
+    "autoplay_delay": {
+      "type": "integer",
+      "default": 5000,
+      "min": 2000,
+      "max": 10000
+    }
+  }
+}
+

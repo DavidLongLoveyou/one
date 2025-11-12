@@ -1,0 +1,50 @@
+{
+  "collectionName": "components_section_factory_storys",
+  "info": {
+    "displayName": "Factory Story",
+    "description": "Factory and process story section"
+  },
+  "options": {},
+  "attributes": {
+    "headline": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "story_text": {
+      "type": "richtext",
+      "required": true
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "image_position": {
+      "type": "enumeration",
+      "enum": ["left", "right"],
+      "default": "left"
+    },
+    "key_stats": {
+      "type": "component",
+      "repeatable": true,
+      "component": "hero.stat"
+    },
+    "expertise_proofs": {
+      "type": "component",
+      "repeatable": true,
+      "component": "hero.trust-indicator"
+    },
+    "layout": {
+      "type": "enumeration",
+      "enum": ["split-60-40", "split-50-50", "image-full"],
+      "default": "split-60-40"
+    },
+    "enable_counter_animation": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}
+

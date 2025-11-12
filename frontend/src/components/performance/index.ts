@@ -1,0 +1,2 @@
+export { WebVitals } from './WebVitals';
+
