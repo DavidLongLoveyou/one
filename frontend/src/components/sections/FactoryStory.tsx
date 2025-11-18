@@ -135,7 +135,7 @@ export function FactoryStory({ data, locale }: FactoryStoryProps) {
                 >
                   <Image
                     src={imageUrl}
-                    alt={image.data?.attributes?.alternativeText || headline || 'Factory image'}
+                    alt={image?.data?.attributes?.alternativeText || headline || 'Factory image'}
                     fill
                     className="object-cover"
                     sizes="(max-width: 1024px) 100vw, 40vw"
@@ -163,7 +163,7 @@ export function FactoryStory({ data, locale }: FactoryStoryProps) {
           <div className="relative aspect-[16/9] rounded-2xl overflow-hidden shadow-lg mb-8">
             <Image
               src={imageUrl}
-              alt={image.data?.attributes?.alternativeText || headline || 'Factory image'}
+              alt={image?.data?.attributes?.alternativeText || headline || 'Factory image'}
               fill
               className="object-cover"
               sizes="100vw"

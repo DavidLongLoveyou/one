@@ -169,3 +169,25 @@ export function generateFAQPageSchema(faqs: Array<{ question: string; answer: st
   };
 }
 
+/**
+ * Generate HowTo schema for service process steps
+ */
+export function generateHowToSchema(
+  serviceName: string,
+  steps: Array<{ step_number: number; title: string; description: string }>
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: serviceName,
+    step: steps
+      .sort((a, b) => (a.step_number || 0) - (b.step_number || 0))
+      .map((step) => ({
+        '@type': 'HowToStep',
+        position: step.step_number || 0,
+        name: step.title,
+        text: step.description,
+      })),
+  };
+}
+

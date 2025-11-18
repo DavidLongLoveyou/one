@@ -114,7 +114,7 @@ export function FaqSeo({ data, locale }: FaqSeoProps) {
             </div>
           )}
 
-          {layout === 'split-categories' && categories.length > 1 && (
+          {((layout as string) === 'split-categories') && categories.length > 1 && (
             <div className="flex flex-wrap gap-2 justify-center mb-8">
               <button
                 onClick={() => setSelectedCategory(null)}

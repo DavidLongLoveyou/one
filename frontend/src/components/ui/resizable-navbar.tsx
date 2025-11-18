@@ -76,11 +76,12 @@ export function ResizableNavbar({
                   key={link.href}
                   href={`${prefix}${link.href}`}
                   className={cn(
-                    'relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg',
+                    'relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2',
                     isActive
                       ? 'text-green-600 bg-green-50'
                       : 'text-green-800 hover:text-green-600 hover:bg-green-50/50'
                   )}
+                  aria-current={isActive ? 'page' : undefined}
                 >
                   {link.label}
                   {isActive && (

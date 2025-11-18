@@ -16,36 +16,58 @@
     }
   },
   "attributes": {
-    "title": {
+    "name": {
       "type": "string",
       "required": true,
       "maxLength": 200
     },
     "slug": {
       "type": "uid",
-      "targetField": "title",
+      "targetField": "name",
       "required": true
     },
-    "excerpt": {
-      "type": "text",
-      "maxLength": 300
+    "tagline": {
+      "type": "string",
+      "maxLength": 150
     },
-    "description": {
+    "overview": {
       "type": "richtext",
       "required": true
     },
-    "icon_name": {
-      "type": "string",
-      "maxLength": 50
-    },
-    "featured_image": {
+    "hero_image": {
       "type": "media",
       "multiple": false,
       "required": false,
       "allowedTypes": ["images"]
     },
-    "cta_url": {
-      "type": "string"
+    "process_steps": {
+      "type": "component",
+      "repeatable": true,
+      "component": "service.process-step"
+    },
+    "capabilities": {
+      "type": "component",
+      "repeatable": true,
+      "component": "service.capability"
+    },
+    "case_studies": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::testimonial.testimonial"
+    },
+    "faq_items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.faq-item"
+    },
+    "related_products": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::product.product"
+    },
+    "primary_cta": {
+      "type": "component",
+      "component": "shared.button"
     },
     "seo": {
       "type": "component",

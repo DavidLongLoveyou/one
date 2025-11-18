@@ -24,39 +24,79 @@
     "reviewer_name": {
       "type": "string",
       "required": true,
-      "maxLength": 100
+      "maxLength": 100,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "reviewer_title": {
       "type": "string",
-      "maxLength": 100
+      "maxLength": 100,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "reviewer_company": {
       "type": "string",
-      "maxLength": 100
+      "maxLength": 100,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "reviewer_avatar": {
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": ["images"],
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "company_logo": {
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": ["images"],
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "rating": {
       "type": "integer",
       "min": 1,
-      "max": 5
+      "max": 5,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "featured": {
       "type": "boolean",
-      "default": false
+      "default": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "review_date": {
-      "type": "date"
+      "type": "date",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     }
   }
 }

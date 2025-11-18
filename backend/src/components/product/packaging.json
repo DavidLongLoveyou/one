@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_product_packagings",
+  "info": {
+    "displayName": "Product Packaging",
+    "description": "Packaging option for a product"
+  },
+  "options": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": ["bulk", "bag", "box", "custom"],
+      "required": true
+    },
+    "size": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "text",
+      "maxLength": 500
+    },
+    "minimum_order": {
+      "type": "string",
+      "maxLength": 50
+    }
+  }
+}
+

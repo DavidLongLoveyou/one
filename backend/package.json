@@ -11,21 +11,39 @@
     "start": "strapi start",
     "build": "strapi build",
     "strapi": "strapi",
-    "test:setup": "node test-setup.js"
+    "test:setup": "node test-setup.js",
+    "populate:phase1": "node scripts/populate-content.js 1",
+    "populate:phase2": "node scripts/populate-content.js 2",
+    "populate:phase3": "node scripts/populate-content.js 3",
+    "populate:phase4": "node scripts/populate-content.js 4",
+    "populate:all": "node scripts/auto-populate.js",
+    "populate:auto": "node scripts/auto-populate.js",
+    "populate:start": "node scripts/start-and-populate.js",
+    "populate:fix": "node scripts/fix-db-and-populate.js",
+    "populate:restart": "node scripts/restart-and-populate.js",
+    "populate:run": "node scripts/master-populate.js",
+    "populate:master": "node scripts/master-populate.js",
+    "populate:setup-token": "node scripts/setup-api-token.js"
   },
   "dependencies": {
-    "@strapi/strapi": "5.3.0",
-    "@strapi/plugin-users-permissions": "5.3.0",
-    "@strapi/plugin-i18n": "5.3.0",
-    "@strapi/plugin-cloud": "5.3.0",
-    "pg": "^8.13.0",
-    "pg-connection-string": "^2.7.0"
+    "@strapi/plugin-cloud": "^5.2.0",
+    "@strapi/plugin-users-permissions": "^5.2.0",
+    "@strapi/strapi": "^5.2.0",
+    "pg": "^8.16.3",
+    "pg-connection-string": "^2.7.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.1",
+    "styled-components": "^6.1.19",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
-    "better-sqlite3": "^11.5.0"
+    "better-sqlite3": "^11.5.0",
+    "dotenv": "^17.2.3",
+    "esbuild": "^0.27.0",
+    "esbuild-register": "^3.6.0"
   },
   "strapi": {
     "uuid": "to-be-generated"
   }
 }
-

@@ -3,10 +3,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { getKnowledgeAsset } from '@/lib/cms-client';
+import { Breadcrumbs, TableOfContents, ContentSectionsRenderer, SocialShare, ArticleCard } from '@/components/shared';
+import { getKnowledgeAsset, getKnowledgeAssetsByCategory, getStrapiImageUrl } from '@/lib/cms-client';
 import { generateKnowledgeAssetMetadata } from '@/lib/seo/metadata';
 import { generateArticleSchema, generateBreadcrumbSchema } from '@/lib/seo/json-ld';
-import { getStrapiImageUrl } from '@/lib/cms-client';
 import { Calendar, Clock, User, ArrowLeft } from 'lucide-react';
 import type { Metadata } from 'next';
 
@@ -31,6 +31,67 @@ export async function generateMetadata({
   }
 }
 
+// Extract TOC items from content_sections or use table_of_contents
+function extractTOCItems(article: any): Array<{ level: number; text: string; id: string }> {
+  // If table_of_contents exists, use it
+  if (article.table_of_contents && Array.isArray(article.table_of_contents)) {
+    return article.table_of_contents;
+  }
+
+  // Otherwise, extract from content_sections
+  const tocItems: Array<{ level: number; text: string; id: string }> = [];
+  
+  const generateSlug = (text: string): string => {
+    return text
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim();
+  };
+
+  const extractFromContent = (content: any) => {
+    if (Array.isArray(content)) {
+      content.forEach((block: any) => {
+        if (block.type === 'heading') {
+          const level = block.level || 2;
+          const text = block.children?.map((child: any) => child.text).join(' ') || '';
+          if (text && (level === 2 || level === 3)) {
+            tocItems.push({
+              level,
+              text,
+              id: generateSlug(text),
+            });
+          }
+        }
+        // Recursively check nested content
+        if (block.children) {
+          extractFromContent(block.children);
+        }
+      });
+    }
+  };
+
+  // Check content_sections
+  if (article.content_sections) {
+    article.content_sections.forEach((section: any) => {
+      if (section.content) {
+        extractFromContent(section.content);
+      }
+      if (section.text) {
+        extractFromContent(section.text);
+      }
+    });
+  }
+
+  // Fallback: check old content field
+  if (article.content && !article.content_sections) {
+    extractFromContent(article.content);
+  }
+
+  return tocItems;
+}
+
 export default async function KnowledgeAssetPage({
   params,
 }: {
@@ -48,6 +109,16 @@ export default async function KnowledgeAssetPage({
     : null;
   const author = article.author?.data?.attributes;
   const category = article.category?.data?.attributes;
+  const categoryId = article.category?.data?.id;
+
+  // Extract TOC items
+  const tocItems = extractTOCItems(article);
+
+  // Fetch related articles
+  const relatedArticles = categoryId
+    ? await getKnowledgeAssetsByCategory(category?.slug || '', params.locale, 4)
+        .then(articles => articles.filter(a => a.id !== article.id).slice(0, 3))
+    : [];
 
   // Generate schemas
   const articleSchema = generateArticleSchema(article, params.locale);
@@ -73,100 +144,39 @@ export default async function KnowledgeAssetPage({
     }
   };
 
-  // Render rich text
-  const renderRichText = (content: any) => {
-    if (typeof content === 'string') {
-      return <div dangerouslySetInnerHTML={{ __html: content }} />;
-    }
-    if (Array.isArray(content)) {
-      return content.map((block: any, index: number) => {
-        if (block.type === 'paragraph') {
-          return (
-            <p key={index} className="mb-4 text-green-700 leading-relaxed">
-              {block.children?.map((child: any) => child.text).join(' ')}
-            </p>
-          );
-        }
-        if (block.type === 'heading') {
-          const level = block.level || 2;
-          const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
-          return (
-            <HeadingTag
-              key={index}
-              className={`mb-4 mt-8 font-bold text-green-800 ${
-                level === 2 ? 'text-2xl' : level === 3 ? 'text-xl' : 'text-lg'
-              }`}
-            >
-              {block.children?.map((child: any) => child.text).join(' ')}
-            </HeadingTag>
-          );
-        }
-        if (block.type === 'list') {
-          const ListTag = block.format === 'ordered' ? 'ol' : 'ul';
-          return (
-            <ListTag
-              key={index}
-              className={`mb-4 ml-6 ${
-                block.format === 'ordered' ? 'list-decimal' : 'list-disc'
-              }`}
-            >
-              {block.children?.map((item: any, itemIndex: number) => (
-                <li key={itemIndex} className="mb-2 text-green-700">
-                  {item.children?.map((child: any) => child.text).join(' ')}
-                </li>
-              ))}
-            </ListTag>
-          );
-        }
-        return null;
-      });
-    }
-    return null;
-  };
+  // Use content_sections if available, fallback to content
+  const contentSections = (article as any).content_sections || 
+    (article.content ? [{ __component: 'section.text-block', content: article.content }] : []);
 
   return (
     <>
       <Header locale={params.locale} />
       <main className="min-h-screen">
-        {/* Breadcrumbs */}
-        <nav className="bg-green-50 py-4" aria-label="Breadcrumb">
-          <div className="container mx-auto px-4">
-            <ol className="flex items-center gap-2 text-sm">
-              <li>
-                <Link href={`${prefix}`} className="text-green-600 hover:text-green-700">
-                  Home
-                </Link>
-              </li>
-              <li className="text-green-400">/</li>
-              <li>
-                <Link href={`${prefix}/resources`} className="text-green-600 hover:text-green-700">
-                  Resources
-                </Link>
-              </li>
-              <li className="text-green-400">/</li>
-              <li className="text-green-800 font-medium" aria-current="page">
-                {article.title}
-              </li>
-            </ol>
-          </div>
-        </nav>
+        <Breadcrumbs
+          items={[
+            { label: 'Home', href: `${prefix}` },
+            { label: 'Resources', href: `${prefix}/resources` },
+            { label: article.title, href: `${prefix}/resources/${article.slug}` },
+          ]}
+        />
 
         <article className="container mx-auto px-4 py-12">
-          <div className="max-w-3xl mx-auto">
-            {/* Back Link */}
-            <Link
-              href={`${prefix}/resources`}
-              className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 mb-8 transition-colors"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Resources
-            </Link>
-
+          <div className="max-w-7xl mx-auto">
             {/* Header */}
             <header className="mb-8">
+              <div className="flex items-center gap-4 mb-4">
+                <Link
+                  href={`${prefix}/resources`}
+                  className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 transition-colors"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back to Resources
+                </Link>
+              </div>
+
               {category && (
                 <Link
-                  href={`${prefix}/resources?category=${category.slug}`}
+                  href={`${prefix}/resources/category/${category.slug}`}
                   className="inline-block px-3 py-1 text-sm font-medium bg-green-100 text-green-800 rounded-full hover:bg-green-200 transition-colors mb-4"
                 >
                   {category.name}
@@ -178,7 +188,7 @@ export default async function KnowledgeAssetPage({
               </h1>
 
               {article.excerpt && (
-                <p className="text-xl text-green-700 mb-6 leading-relaxed">
+                <p className="text-xl text-green-700 mb-6 leading-relaxed max-w-3xl">
                   {article.excerpt}
                 </p>
               )}
@@ -236,38 +246,93 @@ export default async function KnowledgeAssetPage({
               </div>
             )}
 
-            {/* Content */}
-            <div className="prose prose-green max-w-none">
-              {renderRichText(article.content)}
+            {/* Two Column Layout */}
+            <div className="grid lg:grid-cols-3 gap-12">
+              {/* Main Content - 66% */}
+              <div className="lg:col-span-2">
+                <ContentSectionsRenderer sections={contentSections} />
+
+                {/* Social Share */}
+                <div className="mt-12 pt-8 border-t border-green-200">
+                  <SocialShare
+                    url={`${prefix}/resources/${article.slug}`}
+                    title={article.title}
+                    description={article.excerpt || ''}
+                  />
+                </div>
+
+                {/* Author Bio Box */}
+                {author && (
+                  <div className="mt-12 p-6 bg-green-50 rounded-xl">
+                    <div className="flex items-start gap-4">
+                      {author.avatar?.data?.attributes?.url && (
+                        <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
+                          <Image
+                            src={getStrapiImageUrl(author.avatar)}
+                            alt={author.name || 'Author'}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="text-lg font-semibold text-green-800 mb-1">
+                          {author.name}
+                        </h3>
+                        {author.title && (
+                          <p className="text-green-600 mb-2">{author.title}</p>
+                        )}
+                        {(author as any).bio && (
+                          <p className="text-green-700 text-sm">{(author as any).bio}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Sidebar - 33% */}
+              <aside className="lg:col-span-1">
+                {tocItems.length > 0 && (
+                  <div className="mb-8">
+                    <TableOfContents items={tocItems} />
+                  </div>
+                )}
+
+                {/* CTA Box */}
+                <div className="bg-green-50 rounded-lg p-6 border border-green-200 mb-8">
+                  <h3 className="text-lg font-semibold text-green-800 mb-2">
+                    Need Help?
+                  </h3>
+                  <p className="text-sm text-green-700 mb-4">
+                    Have questions about our coffee processing services?
+                  </p>
+                  <Link
+                    href={`${prefix}/contact`}
+                    className="inline-block w-full text-center px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    Contact Us
+                  </Link>
+                </div>
+              </aside>
             </div>
 
-            {/* Author Card */}
-            {author && (
-              <div className="mt-12 p-6 bg-green-50 rounded-xl">
-                <div className="flex items-start gap-4">
-                  {author.avatar?.data?.attributes?.url && (
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
-                      <Image
-                        src={getStrapiImageUrl(author.avatar)}
-                        alt={author.name || 'Author'}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-                  <div>
-                    <h3 className="text-lg font-semibold text-green-800 mb-1">
-                      {author.name}
-                    </h3>
-                    {author.title && (
-                      <p className="text-green-600 mb-2">{author.title}</p>
-                    )}
-                    {author.bio && (
-                      <p className="text-green-700 text-sm">{author.bio}</p>
-                    )}
-                  </div>
+            {/* Related Articles */}
+            {relatedArticles.length > 0 && (
+              <section className="mt-16 pt-12 border-t border-green-200">
+                <h2 className="text-3xl font-bold text-green-800 mb-8">
+                  Related Articles
+                </h2>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {relatedArticles.map((relatedArticle: any) => (
+                    <ArticleCard
+                      key={relatedArticle.id}
+                      article={relatedArticle}
+                      locale={params.locale}
+                    />
+                  ))}
                 </div>
-              </div>
+              </section>
             )}
           </div>
         </article>
@@ -287,3 +352,4 @@ export default async function KnowledgeAssetPage({
   );
 }
 
+export const revalidate = 1800;

@@ -1,0 +1,35 @@
+{
+  "collectionName": "components_about_ceo_profiles",
+  "info": {
+    "displayName": "CEO Profile",
+    "description": "CEO profile information"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "photo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "bio": {
+      "type": "richtext",
+      "required": true
+    },
+    "quote": {
+      "type": "text",
+      "maxLength": 500
+    }
+  }
+}
+

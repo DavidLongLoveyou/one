@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_about_timeline_events",
+  "info": {
+    "displayName": "Timeline Event",
+    "description": "Company timeline event"
+  },
+  "options": {},
+  "attributes": {
+    "year": {
+      "type": "string",
+      "required": true,
+      "maxLength": 20
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "description": {
+      "type": "text",
+      "required": true,
+      "maxLength": 1000
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}
+

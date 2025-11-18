@@ -1,0 +1,65 @@
+{
+  "kind": "singleType",
+  "collectionName": "about_pages",
+  "info": {
+    "singularName": "about-page",
+    "pluralName": "about-pages",
+    "displayName": "About Us Page",
+    "description": "About us page content"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "hero_headline": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "hero_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "mission_statement": {
+      "type": "text",
+      "required": true,
+      "maxLength": 1000
+    },
+    "vision_statement": {
+      "type": "text",
+      "required": true,
+      "maxLength": 1000
+    },
+    "timeline_events": {
+      "type": "component",
+      "repeatable": true,
+      "component": "about.timeline-event"
+    },
+    "ceo_section": {
+      "type": "component",
+      "component": "about.ceo-profile"
+    },
+    "core_values": {
+      "type": "component",
+      "repeatable": true,
+      "component": "about.value"
+    },
+    "factory_tour_cta": {
+      "type": "component",
+      "component": "shared.button"
+    },
+    "seo": {
+      "type": "component",
+      "component": "seo.metadata",
+      "required": false
+    }
+  }
+}
+

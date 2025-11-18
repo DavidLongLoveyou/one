@@ -2,34 +2,68 @@
 
 ## Setup Instructions
 
-1. **Install Dependencies**
-   ```bash
-   npm install
-   ```
+### Prerequisites
 
-2. **Configure Environment**
-   - Copy `.env.example` to `.env`
-   - Generate secure keys for:
-     - `APP_KEYS` (4 random strings)
-     - `API_TOKEN_SALT`
-     - `ADMIN_JWT_SECRET`
-     - `TRANSFER_TOKEN_SALT`
-     - `JWT_SECRET`
-   - Configure database connection (PostgreSQL or SQLite for dev)
+- Node.js >= 20.0.0
+- PostgreSQL 15 (via Docker recommended)
 
-3. **Start Development Server**
-   ```bash
-   npm run develop
-   ```
+### 1. Start PostgreSQL
 
-4. **Create Admin User**
-   - Visit http://localhost:1337/admin
-   - Complete the admin registration
+From project root:
+```bash
+docker-compose up -d
+```
 
-5. **Configure Permissions**
-   - Go to Settings > Users & Permissions > Roles > Public
-   - Enable `find` and `findOne` for all content types
-   - Enable `find` for homepage (single type)
+See [DATABASE-SETUP.md](./DATABASE-SETUP.md) for alternative setup options (Supabase, VPS).
+
+### 2. Install Dependencies
+
+```bash
+cd backend
+npm install
+```
+
+### 3. Configure Environment
+
+```bash
+cp env.example .env
+```
+
+Generate secrets:
+```bash
+# Run 4 times for APP_KEYS
+node -e "console.log(require('crypto').randomBytes(16).toString('base64'))"
+```
+
+Edit `.env` with PostgreSQL configuration:
+```env
+DATABASE_CLIENT=postgres
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_NAME=thegreatbeans
+DATABASE_USERNAME=strapi
+DATABASE_PASSWORD=strapi_dev_password
+# ... and other secrets
+```
+
+See [ENVIRONMENT-VARIABLES.md](../ENVIRONMENT-VARIABLES.md) for complete reference.
+
+### 4. Start Development Server
+
+```bash
+npm run develop
+```
+
+### 5. Create Admin User
+
+- Visit http://localhost:1337/admin
+- Complete the admin registration
+
+### 6. Configure Permissions
+
+- Go to Settings > Users & Permissions > Roles > Public
+- Enable `find` and `findOne` for all content types
+- Enable `find` for homepage (single type)
 
 ## Content Types
 

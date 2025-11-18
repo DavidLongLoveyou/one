@@ -14,12 +14,12 @@ export function WebVitals() {
 
     // Import web-vitals dynamically
     import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB, onINP }) => {
-      onCLS((metric) => reportWebVitals(metric));
-      onFID((metric) => reportWebVitals(metric));
-      onFCP((metric) => reportWebVitals(metric));
-      onLCP((metric) => reportWebVitals(metric));
-      onTTFB((metric) => reportWebVitals(metric));
-      onINP((metric) => reportWebVitals(metric));
+      onCLS((metric) => reportWebVitals({ ...metric, label: metric.rating || 'unknown' }));
+      onFID((metric) => reportWebVitals({ ...metric, label: metric.rating || 'unknown' }));
+      onFCP((metric) => reportWebVitals({ ...metric, label: metric.rating || 'unknown' }));
+      onLCP((metric) => reportWebVitals({ ...metric, label: metric.rating || 'unknown' }));
+      onTTFB((metric) => reportWebVitals({ ...metric, label: metric.rating || 'unknown' }));
+      onINP((metric) => reportWebVitals({ ...metric, label: metric.rating || 'unknown' }));
     });
   }, []);
 

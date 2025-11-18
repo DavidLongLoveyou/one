@@ -219,7 +219,7 @@ export async function getKnowledgeAsset(
         fields: ['url', 'alternativeText', 'width', 'height', 'formats'],
       },
       author: {
-        fields: ['name', 'title', 'slug'],
+        fields: ['name', 'title', 'slug', 'bio'],
         populate: {
           avatar: {
             fields: ['url', 'alternativeText'],
@@ -227,7 +227,27 @@ export async function getKnowledgeAsset(
         },
       },
       category: {
-        fields: ['name', 'slug', 'description'],
+        fields: ['name', 'slug', 'description', 'id'],
+      },
+      content_sections: {
+        on: {
+          'section.text-block': {
+            populate: '*',
+          },
+          'section.image-block': {
+            populate: {
+              image: {
+                fields: ['url', 'alternativeText', 'width', 'height'],
+              },
+            },
+          },
+          'section.quote-block': {
+            populate: '*',
+          },
+          'section.code-block': {
+            populate: '*',
+          },
+        },
       },
       seo: {
         populate: {
@@ -291,7 +311,32 @@ export async function getProduct(
         fields: ['url', 'alternativeText', 'width', 'height'],
       },
       category: {
+        fields: ['name', 'slug', 'id'],
+      },
+      specifications: {
+        populate: '*',
+      },
+      packaging_options: {
+        populate: '*',
+      },
+      certifications: {
         fields: ['name', 'slug'],
+        populate: {
+          logo: {
+            fields: ['url', 'alternativeText'],
+          },
+        },
+      },
+      related_products: {
+        fields: ['name', 'slug', 'title'],
+        populate: {
+          featured_image: {
+            fields: ['url', 'alternativeText', 'width', 'height'],
+          },
+          category: {
+            fields: ['name', 'slug'],
+          },
+        },
       },
       seo: {
         populate: {
@@ -347,8 +392,46 @@ export async function getService(
       },
     },
     populate: {
+      hero_image: {
+        fields: ['url', 'alternativeText', 'width', 'height', 'formats'],
+      },
       featured_image: {
         fields: ['url', 'alternativeText', 'width', 'height', 'formats'],
+      },
+      process_steps: {
+        populate: {
+          illustration: {
+            fields: ['url', 'alternativeText', 'width', 'height'],
+          },
+        },
+      },
+      capabilities: {
+        populate: '*',
+      },
+      faq_items: {
+        populate: '*',
+      },
+      case_studies: {
+        fields: ['name', 'title', 'quote', 'company'],
+        populate: {
+          reviewer_avatar: {
+            fields: ['url', 'alternativeText'],
+          },
+          company_logo: {
+            fields: ['url', 'alternativeText'],
+          },
+        },
+      },
+      related_products: {
+        fields: ['name', 'slug', 'title'],
+        populate: {
+          featured_image: {
+            fields: ['url', 'alternativeText', 'width', 'height'],
+          },
+        },
+      },
+      primary_cta: {
+        populate: '*',
       },
       seo: {
         populate: {
@@ -386,6 +469,278 @@ export async function getService(
     
   } catch (error) {
     console.error(`Error fetching service ${slug}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch category by slug
+ */
+export async function getCategory(
+  slug: string,
+  locale: string = 'en'
+): Promise<any | null> {
+  const query = qs.stringify({
+    filters: {
+      slug: {
+        $eq: slug,
+      },
+    },
+    populate: {
+      featured_image: {
+        fields: ['url', 'alternativeText', 'width', 'height'],
+      },
+    },
+    locale: locale,
+  });
+
+  try {
+    const response = await fetch(`${API_URL}/api/categories?${query}`, {
+      headers: {
+        'Authorization': API_TOKEN ? `Bearer ${API_TOKEN}` : '',
+        'Content-Type': 'application/json',
+      },
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const json = await response.json();
+    
+    if (!json.data || json.data.length === 0) {
+      return null;
+    }
+    
+    return json.data[0];
+    
+  } catch (error) {
+    console.error(`Error fetching category ${slug}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch knowledge assets by category
+ */
+export async function getKnowledgeAssetsByCategory(
+  categorySlug: string,
+  locale: string = 'en',
+  limit: number = 10
+): Promise<any[]> {
+  const query = qs.stringify({
+    filters: {
+      category: {
+        slug: {
+          $eq: categorySlug,
+        },
+      },
+    },
+    populate: {
+      featured_image: {
+        fields: ['url', 'alternativeText', 'width', 'height'],
+      },
+      author: {
+        fields: ['name', 'slug'],
+        populate: {
+          avatar: {
+            fields: ['url', 'alternativeText'],
+          },
+        },
+      },
+      category: {
+        fields: ['name', 'slug'],
+      },
+    },
+    pagination: {
+      limit,
+    },
+    sort: ['published_date:desc'],
+    locale: locale,
+  });
+
+  try {
+    const response = await fetch(`${API_URL}/api/knowledge-assets?${query}`, {
+      headers: {
+        'Authorization': API_TOKEN ? `Bearer ${API_TOKEN}` : '',
+        'Content-Type': 'application/json',
+      },
+      next: { revalidate: 1800 },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json.data || [];
+    
+  } catch (error) {
+    console.error(`Error fetching knowledge assets for category ${categorySlug}:`, error);
+    return [];
+  }
+}
+
+/**
+ * Fetch related products
+ */
+export async function getRelatedProducts(
+  categoryId: number | undefined,
+  excludeProductId: number,
+  locale: string = 'en',
+  limit: number = 4
+): Promise<any[]> {
+  if (!categoryId) {
+    return [];
+  }
+
+  const query = qs.stringify({
+    filters: {
+      category: {
+        id: {
+          $eq: categoryId,
+        },
+      },
+      id: {
+        $ne: excludeProductId,
+      },
+    },
+    populate: {
+      featured_image: {
+        fields: ['url', 'alternativeText', 'width', 'height'],
+      },
+      category: {
+        fields: ['name', 'slug'],
+      },
+    },
+    pagination: {
+      limit,
+    },
+    locale: locale,
+  });
+
+  try {
+    const response = await fetch(`${API_URL}/api/products?${query}`, {
+      headers: {
+        'Authorization': API_TOKEN ? `Bearer ${API_TOKEN}` : '',
+        'Content-Type': 'application/json',
+      },
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json.data || [];
+    
+  } catch (error) {
+    console.error('Error fetching related products:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch about page
+ */
+export async function getAboutPage(locale: string = 'en'): Promise<any | null> {
+  const query = qs.stringify({
+    populate: {
+      hero_image: {
+        fields: ['url', 'alternativeText', 'width', 'height'],
+      },
+      ceo_section: {
+        populate: {
+          photo: {
+            fields: ['url', 'alternativeText', 'width', 'height'],
+          },
+          certifications: {
+            populate: {
+              logo: {
+                fields: ['url', 'alternativeText'],
+              },
+            },
+          },
+        },
+      },
+      timeline_events: {
+        populate: {
+          image: {
+            fields: ['url', 'alternativeText', 'width', 'height'],
+          },
+        },
+      },
+      factory_tour_cta: true,
+      seo: {
+        populate: {
+          metaImage: {
+            fields: ['url', 'alternativeText'],
+          },
+        },
+      },
+    },
+    locale: locale,
+  });
+
+  try {
+    const response = await fetch(`${API_URL}/api/about-page?${query}`, {
+      headers: {
+        'Authorization': API_TOKEN ? `Bearer ${API_TOKEN}` : '',
+        'Content-Type': 'application/json',
+      },
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json.data || null;
+    
+  } catch (error) {
+    console.error('Error fetching about page:', error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch contact page
+ */
+export async function getContactPage(locale: string = 'en'): Promise<any | null> {
+  const query = qs.stringify({
+    populate: {
+      seo: {
+        populate: {
+          metaImage: {
+            fields: ['url', 'alternativeText'],
+          },
+        },
+      },
+    },
+    locale: locale,
+  });
+
+  try {
+    const response = await fetch(`${API_URL}/api/contact-page?${query}`, {
+      headers: {
+        'Authorization': API_TOKEN ? `Bearer ${API_TOKEN}` : '',
+        'Content-Type': 'application/json',
+      },
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json.data || null;
+    
+  } catch (error) {
+    console.error('Error fetching contact page:', error);
     throw error;
   }
 }

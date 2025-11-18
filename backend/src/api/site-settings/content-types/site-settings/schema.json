@@ -3,7 +3,7 @@
   "collectionName": "site_settings",
   "info": {
     "singularName": "site-settings",
-    "pluralName": "site-settings",
+    "pluralName": "site-settings-single",
     "displayName": "Site Settings",
     "description": "Global site settings"
   },
@@ -39,17 +39,32 @@
     },
     "contact_email": {
       "type": "email",
-      "required": false
+      "required": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "contact_phone": {
       "type": "string",
-      "maxLength": 50
+      "maxLength": 50,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "address": {
       "type": "text"
     },
     "social_media": {
-      "type": "json"
+      "type": "json",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     }
   }
 }

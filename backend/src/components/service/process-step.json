@@ -1,0 +1,36 @@
+{
+  "collectionName": "components_service_process_steps",
+  "info": {
+    "displayName": "Service Process Step",
+    "description": "A step in the service process"
+  },
+  "options": {},
+  "attributes": {
+    "step_number": {
+      "type": "integer",
+      "required": true,
+      "min": 1
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "description": {
+      "type": "text",
+      "required": true,
+      "maxLength": 1000
+    },
+    "icon_name": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "illustration": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}
+

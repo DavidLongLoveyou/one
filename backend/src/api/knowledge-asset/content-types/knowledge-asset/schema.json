@@ -30,9 +30,18 @@
       "type": "text",
       "maxLength": 300
     },
-    "content": {
-      "type": "richtext",
+    "content_sections": {
+      "type": "dynamiczone",
+      "components": [
+        "section.text-block",
+        "section.image-block",
+        "section.quote-block",
+        "section.code-block"
+      ],
       "required": true
+    },
+    "table_of_contents": {
+      "type": "json"
     },
     "featured_image": {
       "type": "media",
@@ -51,15 +60,30 @@
       "target": "api::category.category"
     },
     "published_date": {
-      "type": "datetime"
+      "type": "datetime",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "read_time": {
       "type": "integer",
-      "min": 0
+      "min": 0,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "word_count": {
       "type": "integer",
-      "min": 0
+      "min": 0,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "seo": {
       "type": "component",

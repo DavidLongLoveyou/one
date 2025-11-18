@@ -26,7 +26,7 @@ export function Footer({ locale, homepageData }: FooterProps) {
               The Great Beans
             </h3>
             <p className="text-sm text-green-100 mb-4" itemProp="description">
-              Specialty Coffee from Vietnam's Highlands
+              Specialty Coffee from Vietnam&apos;s Highlands
             </p>
             <div className="text-sm text-green-100" itemScope itemType="https://schema.org/PostalAddress">
               <p itemProp="addressLocality">Da Lat</p>

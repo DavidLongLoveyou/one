@@ -25,6 +25,7 @@ export const IMAGE_QUALITY = {
   gallery: 85,
   card: 80,
   icon: 75,
+  full: 90,
   default: 85,
 } as const;
 

@@ -143,7 +143,7 @@ export function generateProductMetadata(
       siteName,
       images: image ? [{ url: image }] : undefined,
       locale: locale === 'vi' ? 'vi_VN' : 'en_US',
-      type: 'product',
+      type: 'website',
     },
     twitter: {
       card: 'summary_large_image',

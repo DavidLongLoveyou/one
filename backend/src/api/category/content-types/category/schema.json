@@ -30,6 +30,24 @@
       "type": "text",
       "maxLength": 500
     },
+    "pillar_page_content": {
+      "type": "richtext"
+    },
+    "pillar_page_faq": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.faq-item"
+    },
+    "featured_image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "meta_description": {
+      "type": "text",
+      "maxLength": 160
+    },
     "color": {
       "type": "string",
       "maxLength": 7

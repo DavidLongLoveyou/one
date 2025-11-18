@@ -16,57 +16,141 @@
     }
   },
   "attributes": {
-    "title": {
+    "name": {
       "type": "string",
       "required": true,
-      "maxLength": 200
+      "maxLength": 100
     },
     "slug": {
       "type": "uid",
-      "targetField": "title",
+      "targetField": "name",
       "required": true
     },
-    "description": {
+    "short_description": {
+      "type": "text",
+      "maxLength": 250
+    },
+    "full_description": {
       "type": "richtext",
       "required": true
     },
     "featured_image": {
       "type": "media",
       "multiple": false,
-      "required": false,
+      "required": true,
       "allowedTypes": ["images"]
     },
     "gallery": {
       "type": "media",
       "multiple": true,
       "required": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": ["images"],
+      "max": 8
     },
     "category": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::category.category"
     },
-    "specifications": {
-      "type": "json"
-    },
     "cupping_score": {
       "type": "decimal",
-      "min": 0,
-      "max": 100
-    },
-    "altitude": {
-      "type": "string"
+      "min": 75,
+      "max": 95,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "processing_method": {
-      "type": "string"
+      "type": "enumeration",
+      "enum": ["washed", "honey", "natural", "other"],
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "origin_region": {
+      "type": "string",
+      "maxLength": 100,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "altitude_range": {
+      "type": "string",
+      "maxLength": 50,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "harvest_season": {
+      "type": "string",
+      "maxLength": 50,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "moisture_content": {
+      "type": "decimal",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "screen_size": {
+      "type": "string",
+      "maxLength": 50,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "specifications": {
+      "type": "component",
+      "repeatable": true,
+      "component": "product.specification"
+    },
+    "packaging_options": {
+      "type": "component",
+      "repeatable": true,
+      "component": "product.packaging"
+    },
+    "certifications": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::certification.certification"
+    },
+    "related_products": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::product.product"
+    },
+    "origin_story": {
+      "type": "richtext"
+    },
+    "sku": {
+      "type": "string",
+      "unique": true,
+      "maxLength": 50,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     },
     "price_range": {
-      "type": "string"
-    },
-    "in_stock": {
-      "type": "boolean",
-      "default": true
+      "type": "string",
+      "maxLength": 100
     },
     "seo": {
       "type": "component",

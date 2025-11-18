@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_contact_inquiry_types",
+  "info": {
+    "displayName": "Inquiry Type",
+    "description": "Contact form inquiry type option"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "value": {
+      "type": "string",
+      "required": true,
+      "maxLength": 50
+    }
+  }
+}
+

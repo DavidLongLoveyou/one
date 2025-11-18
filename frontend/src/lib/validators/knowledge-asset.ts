@@ -20,6 +20,7 @@ const AuthorSchema = z.object({
       name: z.string(),
       slug: z.string(),
       title: z.string().optional(),
+      bio: z.string().optional(),
       avatar: MediaSchema.optional(),
     }),
   }).nullable(),

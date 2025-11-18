@@ -48,7 +48,7 @@ export default async function HomePage({
   return (
     <>
       <Header locale={params.locale} />
-      <main className="min-h-screen">
+      <main id="main-content" className="min-h-screen" tabIndex={-1}>
         {error ? (
           <div className="container mx-auto px-4 py-16">
             <div className="text-center">

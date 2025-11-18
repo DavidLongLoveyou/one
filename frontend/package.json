@@ -17,35 +17,35 @@
     "build:analyze": "cross-env ANALYZE=true next build"
   },
   "dependencies": {
-    "next": "14.2.15",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "typescript": "^5.6.0",
     "@radix-ui/react-accordion": "^1.2.0",
-    "@radix-ui/react-tooltip": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "@radix-ui/react-tooltip": "^1.1.2",
     "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "framer-motion": "^11.11.17",
     "lucide-react": "^0.454.0",
-    "tailwindcss": "^3.4.14",
-    "tailwind-merge": "^2.5.4",
-    "clsx": "^2.1.1",
-    "zod": "^3.23.8",
+    "next": "14.2.15",
     "qs": "^6.13.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "sharp": "^0.33.5",
-    "web-vitals": "^4.2.4"
+    "tailwind-merge": "^2.5.4",
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.6.0",
+    "web-vitals": "^4.2.4",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^14.2.15",
     "@types/node": "^22",
+    "@types/qs": "^6.9.16",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@types/qs": "^6.9.16",
+    "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.47",
-    "@next/bundle-analyzer": "^14.2.15",
-    "cross-env": "^7.0.3"
+    "postcss": "^8.4.47"
   }
 }
-

@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { trapFocus, KEYBOARD_KEYS } from '@/lib/accessibility';
 
 interface StaggeredMenuProps {
   locale: string;
@@ -46,6 +47,7 @@ const itemVariants = {
 
 export function StaggeredMenu({ locale, links }: StaggeredMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLElement>(null);
 
   const prefix = locale === 'en' ? '' : `/${locale}`;
 
@@ -59,6 +61,25 @@ export function StaggeredMenu({ locale, links }: StaggeredMenuProps) {
     return () => {
       document.body.style.overflow = 'unset';
     };
+  }, [isOpen]);
+
+  // Trap focus when menu is open
+  useEffect(() => {
+    if (isOpen && menuRef.current) {
+      const cleanup = trapFocus(menuRef.current);
+      return cleanup;
+    }
+  }, [isOpen]);
+
+  // Handle Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === KEYBOARD_KEYS.ESCAPE && isOpen) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen]);
 
   return (
@@ -111,11 +132,14 @@ export function StaggeredMenu({ locale, links }: StaggeredMenuProps) {
 
             {/* Menu */}
             <motion.nav
+              ref={menuRef}
               variants={menuVariants}
               initial="closed"
               animate="open"
               exit="closed"
               className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-white shadow-2xl z-50 md:hidden overflow-y-auto"
+              aria-label="Main navigation"
+              role="navigation"
             >
               <div className="p-8">
                 {/* Header */}
@@ -139,7 +163,12 @@ export function StaggeredMenu({ locale, links }: StaggeredMenuProps) {
                       <Link
                         href={`${prefix}${link.href}`}
                         onClick={() => setIsOpen(false)}
-                        className="block py-4 text-2xl font-semibold text-green-800 hover:text-green-600 transition-colors border-b border-green-100"
+                        className="block py-4 text-2xl font-semibold text-green-800 hover:text-green-600 transition-colors border-b border-green-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded"
+                        onKeyDown={(e) => {
+                          if (e.key === KEYBOARD_KEYS.ESCAPE) {
+                            setIsOpen(false);
+                          }
+                        }}
                       >
                         {link.label.split('').map((char, charIndex) => (
                           <motion.span

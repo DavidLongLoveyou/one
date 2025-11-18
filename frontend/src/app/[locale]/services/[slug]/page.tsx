@@ -3,10 +3,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { getService } from '@/lib/cms-client';
+import { Breadcrumbs, ProcessTimeline, CapabilitiesGrid, FAQSection, RichTextRenderer, ProductCard } from '@/components/shared';
+import { getService, getStrapiImageUrl } from '@/lib/cms-client';
 import { generateServiceMetadata } from '@/lib/seo/metadata';
-import { generateBreadcrumbSchema } from '@/lib/seo/json-ld';
-import { getStrapiImageUrl } from '@/lib/cms-client';
+import { generateBreadcrumbSchema, generateHowToSchema, generateFAQPageSchema } from '@/lib/seo/json-ld';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({
@@ -42,135 +42,204 @@ export default async function ServicePage({
   }
 
   const prefix = params.locale === 'en' ? '' : `/${params.locale}`;
-  const imageUrl = service.featured_image
-    ? getStrapiImageUrl(service.featured_image)
+  
+  // Support both old (title) and new (name) field names
+  const serviceName = (service as any).name || service.title || 'Service';
+  const tagline = (service as any).tagline;
+  const overview = (service as any).overview || service.description;
+  const heroImage = (service as any).hero_image || service.featured_image;
+  const processSteps = (service as any).process_steps || [];
+  const capabilities = (service as any).capabilities || [];
+  const faqItems = (service as any).faq_items || [];
+  const caseStudies = (service as any).case_studies?.data || [];
+  const relatedProducts = (service as any).related_products?.data || [];
+  const primaryCTA = (service as any).primary_cta;
+
+  const imageUrl = heroImage
+    ? getStrapiImageUrl(heroImage)
     : null;
 
-  // Generate breadcrumb schema
+  // Generate schemas
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}${prefix}` },
     { name: 'Services', url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}${prefix}/services` },
-    { name: service.title, url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}${prefix}/services/${service.slug}` },
+    { name: serviceName, url: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}${prefix}/services/${service.slug}` },
   ]);
 
-  // Render rich text
-  const renderRichText = (content: any) => {
-    if (typeof content === 'string') {
-      return <div dangerouslySetInnerHTML={{ __html: content }} />;
-    }
-    if (Array.isArray(content)) {
-      return content.map((block: any, index: number) => {
-        if (block.type === 'paragraph') {
-          return (
-            <p key={index} className="mb-4 text-green-700">
-              {block.children?.map((child: any) => child.text).join(' ')}
-            </p>
-          );
-        }
-        if (block.type === 'heading') {
-          const level = block.level || 2;
-          const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
-          return (
-            <HeadingTag
-              key={index}
-              className={`mb-4 font-bold text-green-800 ${
-                level === 2 ? 'text-2xl' : level === 3 ? 'text-xl' : 'text-lg'
-              }`}
-            >
-              {block.children?.map((child: any) => child.text).join(' ')}
-            </HeadingTag>
-          );
-        }
-        return null;
-      });
-    }
-    return null;
-  };
+  const howToSchema = processSteps.length > 0
+    ? generateHowToSchema(serviceName, processSteps)
+    : null;
+
+  const faqSchema = faqItems.length > 0
+    ? generateFAQPageSchema(faqItems.map((item: any) => ({
+        question: item.question,
+        answer: item.answer,
+      })))
+    : null;
 
   return (
     <>
       <Header locale={params.locale} />
       <main className="min-h-screen">
-        {/* Breadcrumbs */}
-        <nav className="bg-green-50 py-4" aria-label="Breadcrumb">
-          <div className="container mx-auto px-4">
-            <ol className="flex items-center gap-2 text-sm">
-              <li>
-                <Link href={`${prefix}`} className="text-green-600 hover:text-green-700">
-                  Home
-                </Link>
-              </li>
-              <li className="text-green-400">/</li>
-              <li>
-                <Link href={`${prefix}/services`} className="text-green-600 hover:text-green-700">
-                  Services
-                </Link>
-              </li>
-              <li className="text-green-400">/</li>
-              <li className="text-green-800 font-medium" aria-current="page">
-                {service.title}
-              </li>
-            </ol>
-          </div>
-        </nav>
+        <Breadcrumbs
+          items={[
+            { label: 'Home', href: `${prefix}` },
+            { label: 'Services', href: `${prefix}/services` },
+            { label: serviceName, href: `${prefix}/services/${service.slug}` },
+          ]}
+        />
 
-        <article className="container mx-auto px-4 py-12">
-          <div className="max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="mb-12">
-              {service.excerpt && (
-                <p className="text-xl text-green-700 mb-6">{service.excerpt}</p>
-              )}
-              <h1 className="text-4xl md:text-5xl font-bold text-green-800 mb-6">
-                {service.title}
-              </h1>
+        {/* Hero Section */}
+        <section className="relative py-20 bg-green-50">
+          {imageUrl && (
+            <div className="absolute inset-0 opacity-20">
+              <Image
+                src={imageUrl}
+                alt=""
+                fill
+                className="object-cover"
+              />
             </div>
-
-            {/* Featured Image */}
-            {imageUrl && (
-              <div className="relative aspect-video rounded-2xl overflow-hidden shadow-lg mb-12">
-                <Image
-                  src={imageUrl}
-                  alt={service.title}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 896px"
-                />
+          )}
+          <div className="container mx-auto px-4 relative z-10">
+            <h1 className="text-5xl md:text-6xl font-serif font-bold text-green-800 text-center mb-4">
+              {serviceName}
+            </h1>
+            {tagline && (
+              <p className="text-xl text-green-700 text-center max-w-3xl mx-auto">
+                {tagline}
+              </p>
+            )}
+            {primaryCTA && (
+              <div className="text-center mt-8">
+                <Link
+                  href={primaryCTA.url || `${prefix}/contact`}
+                  className="inline-block px-8 py-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  {primaryCTA.text || 'Request a Quote'}
+                </Link>
               </div>
             )}
+          </div>
+        </section>
 
-            {/* Content */}
-            <div className="prose prose-green max-w-none">
-              {renderRichText(service.description)}
-            </div>
+        <article className="container mx-auto px-4 py-16">
+          <div className="max-w-6xl mx-auto">
+            {/* Overview Section */}
+            <section className="mb-16">
+              <h2 className="text-3xl font-bold text-green-800 mb-6">What We Do</h2>
+              <div className="prose prose-green max-w-none">
+                <RichTextRenderer content={overview} />
+              </div>
+            </section>
 
-            {/* CTA */}
-            <div className="mt-12 p-8 bg-green-50 rounded-xl text-center">
-              <h2 className="text-2xl font-bold mb-4 text-green-800">
+            {/* Process Timeline */}
+            {processSteps.length > 0 && (
+              <section className="mb-16">
+                <h2 className="text-3xl font-bold text-green-800 mb-8 text-center">Our Process</h2>
+                <ProcessTimeline steps={processSteps} />
+              </section>
+            )}
+
+            {/* Capabilities Grid */}
+            {capabilities.length > 0 && (
+              <section className="mb-16">
+                <h2 className="text-3xl font-bold text-green-800 mb-8 text-center">Our Capabilities</h2>
+                <CapabilitiesGrid capabilities={capabilities} />
+              </section>
+            )}
+
+            {/* Case Studies / Social Proof */}
+            {caseStudies.length > 0 && (
+              <section className="mb-16">
+                <h2 className="text-3xl font-bold text-green-800 mb-8 text-center">Client Success Stories</h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {caseStudies.slice(0, 2).map((testimonial: any, index: number) => {
+                    const testimonialData = testimonial.attributes || testimonial;
+                    return (
+                      <div key={index} className="p-6 bg-green-50 rounded-xl border border-green-200">
+                        {testimonialData.quote && (
+                          <blockquote className="text-green-800 mb-4 italic">
+                            &ldquo;{testimonialData.quote}&rdquo;
+                          </blockquote>
+                        )}
+                        {testimonialData.company && (
+                          <p className="text-sm font-semibold text-green-700">
+                            — {testimonialData.company}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+            {/* FAQ Section */}
+            {faqItems.length > 0 && (
+              <FAQSection
+                items={faqItems}
+                title="Frequently Asked Questions"
+              />
+            )}
+
+            {/* Related Products */}
+            {relatedProducts.length > 0 && (
+              <section className="mt-16">
+                <h2 className="text-3xl font-bold text-green-800 mb-8">
+                  Related Products
+                </h2>
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {relatedProducts.map((product: any) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      locale={params.locale}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Final CTA */}
+            <section className="mt-16 p-12 bg-green-600 text-white rounded-xl text-center">
+              <h2 className="text-4xl font-serif font-bold mb-4">
                 Ready to Get Started?
               </h2>
-              <p className="text-green-700 mb-6">
-                Contact us to learn more about our {service.title} services.
+              <p className="text-xl mb-8 max-w-2xl mx-auto">
+                Contact us to learn more about our {serviceName} services and how we can help your business.
               </p>
               <Link
-                href={`${prefix}/contact`}
-                className="inline-block px-8 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+                href={primaryCTA?.url || `${prefix}/contact`}
+                className="inline-block px-8 py-4 bg-white text-green-600 font-semibold rounded-lg hover:bg-green-50 transition-colors"
               >
-                Contact Us
+                {primaryCTA?.text || 'Request a Quote'}
               </Link>
-            </div>
+            </section>
           </div>
         </article>
 
-        {/* Schema */}
+        {/* Schemas */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
         />
+        {howToSchema && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+          />
+        )}
+        {faqSchema && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+          />
+        )}
       </main>
       <Footer locale={params.locale} />
     </>
   );
 }
 
+export const revalidate = 3600;

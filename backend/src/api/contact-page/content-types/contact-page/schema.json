@@ -1,0 +1,92 @@
+{
+  "kind": "singleType",
+  "collectionName": "contact_pages",
+  "info": {
+    "singularName": "contact-page",
+    "pluralName": "contact-pages",
+    "displayName": "Contact Page",
+    "description": "Contact page content"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "headline": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "subheadline": {
+      "type": "text",
+      "maxLength": 500
+    },
+    "factory_address": {
+      "type": "richtext",
+      "required": true
+    },
+    "google_maps_embed_url": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "email_sales": {
+      "type": "email",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "email_support": {
+      "type": "email",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "phone_primary": {
+      "type": "string",
+      "required": true,
+      "maxLength": 50,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "business_hours": {
+      "type": "text",
+      "maxLength": 200
+    },
+    "contact_faq": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.faq-item"
+    },
+    "form_inquiry_types": {
+      "type": "component",
+      "repeatable": true,
+      "component": "contact.inquiry-type"
+    },
+    "success_message": {
+      "type": "text",
+      "maxLength": 500
+    },
+    "seo": {
+      "type": "component",
+      "component": "seo.metadata",
+      "required": false
+    }
+  }
+}
+

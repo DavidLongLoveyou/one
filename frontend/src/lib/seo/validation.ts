@@ -27,7 +27,7 @@ export function validateMetadata(metadata: Metadata): SEOValidationResult {
   } else {
     const title = typeof metadata.title === 'string' 
       ? metadata.title 
-      : metadata.title.absolute || '';
+      : (metadata.title as any)?.absolute || (metadata.title as any)?.default || '';
     
     if (title.length < 30) {
       warnings.push('Title is too short (recommended: 30-60 characters)');
@@ -68,7 +68,12 @@ export function validateMetadata(metadata: Metadata): SEOValidationResult {
       warnings.push('Missing Open Graph description');
       score -= 5;
     }
-    if (!metadata.openGraph.images || metadata.openGraph.images.length === 0) {
+    const ogImages = Array.isArray(metadata.openGraph.images) 
+      ? metadata.openGraph.images 
+      : metadata.openGraph.images 
+        ? [metadata.openGraph.images] 
+        : [];
+    if (ogImages.length === 0) {
       warnings.push('Missing Open Graph image');
       score -= 10;
     }
