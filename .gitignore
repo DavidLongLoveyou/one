@@ -38,6 +38,17 @@ coverage/
 # Development tooling
 .cursor/
 
+# Sensitive company and project docs
+# Move any private docs to docs-private/ for easier management
+docs-private/
+# Common sensitive filenames
+/info
+/roadmap.txt
+**/COMPANY-INFO.md
+# Pattern-based sensitive docs
+**/*.private.md
+**/*.confidential.md
+
 
 
 
