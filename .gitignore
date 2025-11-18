@@ -49,6 +49,13 @@ docs-private/
 **/*.private.md
 **/*.confidential.md
 
+# Internal guides and strategy docs
+**/CONTENT-STRATEGY.md
+**/SEO-GUIDE.md
+**/STRAPI-CONTENT-GUIDE.md
+**/ACCESSIBILITY-GUIDE.md
+backend/scripts/AUTHENTICATION-SUMMARY.md
+
 
 
 
